@@ -12,20 +12,30 @@ References:
   - https://github.com/openshift/cluster-logging-operator
   - https://github.com/openshift/elasticsearch-operator
 
-## Openshift Cluster Logging: Installation
+## Openshift Cluster Logging: Overview
 
-Before start you must choose the rights file:
+This project focus on the following topics:
 
-* __deploy/templates/cl-operator.template.yml__ : this template aims is installing the Openshift Cluster Logging Operator stack within the following features:
+    * logging persistent storage
+    * custom indexes template in order to avoiding the field's map explosion
+    * improving the indexes retention
+    * kibana custom structured field view
 
-    * persistent storage
-    * custom setup of the indexes retention
+Explore the files used by this project:
 
-* __deploy/elasticsearch/es-operator.object.yml__ : this is the subscription object to instanciate the Redhat Elasticsearch Operator
+* __deploy/templates/cl-operator.template.yml__ : this template aims is installing of the Openshift Cluster Logging Operator stack
 
-* __deploy/templates/kibana-externallink.template.yml__ : this template aims is installing the Openshift Cluster Logging Operator stack within the following features:
+* __deploy/elasticsearch/es-operator.object.yml__ : this is the subscription object which instanciate the Redhat Elasticsearch Operator
 
-    * a kibana link aimed to have the structured fields view available as default
+* __deploy/templates/kibana-externallink.template.yml__ : this template creates a new kibana link aimed to have a custom fields view available as default
+
+* __deploy/elasticsearch/index_explicit_mapping_template.sh__ : this script creates a custom index template on ElasticSearch
+
+### Project minimium requirements
+
+* The Openshift client utility: ```oc```
+
+* A cluster admin roles rights
 
 ### RedHat Elasticsearch Operator: setup
 
@@ -73,7 +83,7 @@ you can get a list of the created objects as follows:
      -l app=cl-logging-dedalus --no-headers -n openshift-logging |cut -d' ' -f1
 ```
 
-### Kibana: create the Externmal Console Link
+### Kibana: create the External Console Link
 
 > WARNING: an Admin Cluster Role is required to proceed on this section.
 
@@ -95,8 +105,17 @@ you can get a list of the created objects as follows:
 
 ## Elasticsearch: Indexes Settings
 
-Create the index template:
+Create the index template
 
-```
+
+### Getting the ES pod name
+
+```bash
 es_pod=$(oc -n openshift-logging get pods -l component=elasticsearch --no-headers | head -1 | cut -d" " -f1)
+```
+
+### Run the script
+
+```bash
+curl -s <em>https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/develop/deploy/elasticsearch/index_explicit_mapping_template.sh</em> | bash
 ```
