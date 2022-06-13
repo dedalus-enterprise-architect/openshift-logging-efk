@@ -44,7 +44,7 @@ Explore the files used by this project:
 It runs the following command to install the RedHat Elasticsearch Operator:
 
 ```
-   oc apply -f https://github.com/dedalus-enterprise-architect/efk-resources/blob/main/deploy/elasticsearch/es-operator.object.yml -n openshift-operators-redhat
+   oc apply -f https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/elasticsearch/es-operator.object.yml -n openshift-operators-redhat
 ```
 
 > Check Objects
@@ -62,7 +62,7 @@ you can get a list of the created objects as follows:
 It runs the following command to install the RedHat Openshift Logging Operator by passing the parameters inline:
 
 ```
-   oc process -f https://github.com/dedalus-enterprise-architect/efk-resources/blob/main/deploy/templates/cl-operator.template.yml \
+   oc process -f https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/templates/cl-operator.template.yml \
      -p STORAGECLASS=@type_here_the_custom_storageclass@ \
      | oc -n openshift-logging create -f -
 ```
@@ -70,7 +70,7 @@ It runs the following command to install the RedHat Openshift Logging Operator b
   where below is shown the command with the placeholder: '**@type_here_the_custom_storageclass@**' replaced by the value: 'gp2' and the others parameters have been omitted to load the default settings:
 
 ```
-   oc process -f https://github.com/dedalus-enterprise-architect/efk-resources/blob/main/deploy/templates/cl-operator.template.yml \
+   oc process -f https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/templates/cl-operator.template.yml \
      -p STORAGECLASS=gp2 | oc -n openshift-logging apply -f -
 ```
 
@@ -90,7 +90,7 @@ you can get a list of the created objects as follows:
 It runs the following command to create the External Console Link for Kibana default View:
 
 ```
-   oc process -f https://github.com/dedalus-enterprise-architect/efk-resources/blob/main/deploy/templates/kibana-externallink.template.yml \
+   oc process -f https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/templates/kibana-externallink.template.yml \
      -p KIBANA_ROUTE=$(oc get route kibana -n openshift-logging -o jsonpath='{.spec.host}') \
      | oc -n openshift-logging apply -f -
 ```
@@ -108,7 +108,13 @@ you can get a list of the created objects as follows:
 This step create the default index template:
 
 ```bash
-curl -s <em>https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/elasticsearch/index_explicit_mapping_template.sh</em> | bash
+curl -s https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/elasticsearch/index_explicit_mapping_template.sh | bash
+```
+
+if the command output successfull exit, it will be show somethings like as follow:
+
+```json
+{"acknowledged":true}
 ```
 
 ### Useful ES commands
