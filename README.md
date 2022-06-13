@@ -23,13 +23,13 @@ This project focus on the following topics:
 
 Explore the files used by this project:
 
-* __deploy/templates/cl-operator.template.yml__ : this template aims is installing of the Openshift Cluster Logging Operator stack
+* ```deploy/templates/cl-operator.template.yml``` : this template aims is installing of the Openshift Cluster Logging Operator stack
 
-* __deploy/elasticsearch/es-operator.object.yml__ : this is the subscription object which instanciate the Redhat Elasticsearch Operator
+* ```deploy/elasticsearch/es-operator.object.yml``` : this is the subscription object which instanciate the Redhat Elasticsearch Operator
 
-* __deploy/templates/kibana-externallink.template.yml__ : this template creates a new kibana link aimed to have a custom fields view available as default
+* ```deploy/templates/kibana-externallink.template.yml``` : this template creates a new kibana link aimed to have a custom fields view available as default
 
-* __deploy/elasticsearch/index_explicit_mapping_template.sh__ : this script creates a custom index template on ElasticSearch
+* ```deploy/elasticsearch/index_explicit_mapping_template.sh``` : this script creates a custom index template on ElasticSearch
 
 ### Project minimium requirements
 
