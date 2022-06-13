@@ -105,15 +105,34 @@ you can get a list of the created objects as follows:
 
 ## Elasticsearch: Create the index template
 
+This step create the default index template:
 
-1. Getting the ES pod name
+```bash
+curl -s <em>https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/elasticsearch/index_explicit_mapping_template.sh</em> | bash
+```
+
+### Useful ES commands
+
+Getting the ES pod name as pre-requirements for the nexts commands:
 
 ```bash
 es_pod=$(oc -n openshift-logging get pods -l component=elasticsearch --no-headers | head -1 | cut -d" " -f1)
 ```
 
-2. Run the script
+* Getting a specific Template:
 
 ```bash
-curl -s <em>https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/elasticsearch/index_explicit_mapping_template.sh</em> | bash
+oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/dedalus_es_template
+```
+
+* Delete Template:
+
+```bash
+oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/dedalus_es_template -XDELETE
+```
+
+* Getting All Templates:
+
+```bash
+oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template | jq "[.]"
 ```

@@ -1,3 +1,18 @@
+#!/usr/bin/env bash
+#
+# =======================================
+# AUTHOR        : Claudio Prato @Team EA
+# CREATE DATE   : 2022/06/13
+# PURPOSE       : Setup the es index template
+# SPECIAL NOTES :
+# =======================================
+#
+# Tested on Kibana 6.8.1 management
+# 
+# set -euo pipefail
+
+es_pod=$(oc -n openshift-logging get pods -l component=elasticsearch --no-headers | head -1 | cut -d" " -f1)
+
 oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/dedalus_es_template -XPUT -d'
 {
     "index_patterns": ["app-*"],
