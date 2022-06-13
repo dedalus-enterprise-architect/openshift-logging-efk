@@ -103,19 +103,17 @@ you can get a list of the created objects as follows:
    oc get ConsoleExternalLogLink -l app=es-logging-dedalus --no-headers -n openshift-logging |cut -d' ' -f1
 ```
 
-## Elasticsearch: Indexes Settings
-
-Create the index template
+## Elasticsearch: Create the index template
 
 
-### Getting the ES pod name
+1. Getting the ES pod name
 
 ```bash
 es_pod=$(oc -n openshift-logging get pods -l component=elasticsearch --no-headers | head -1 | cut -d" " -f1)
 ```
 
-### Run the script
+2. Run the script
 
 ```bash
-curl -s <em>https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/develop/deploy/elasticsearch/index_explicit_mapping_template.sh</em> | bash
+curl -s <em>https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/elasticsearch/index_explicit_mapping_template.sh</em> | bash
 ```
