@@ -17,10 +17,10 @@ This is a clipboard about Kibana version 6.8 on Openshift configured by the foll
 ### Kibana usefull commands
 
 ```bash
-# print all the indeces
+# print all the indexes
 GET /_cat/indices?v
 
-# How much memory is used per index?0
+# How much memory is used per index?
 GET /_cat/indices?v&h=i,tm&s=tm:desc
 
 # Which index has the largest number of documents?
@@ -42,7 +42,7 @@ GET /app-test-logging-*/_mapping/_doc?&include_type_name=true
 GET /app-000001/_mapping/_doc?&include_type_name=true
 ```
 
-#### Getting the field mapping'
+#### Getting the field mapping
 
 https://www.elastic.co/guide/en/elasticsearch/reference/6.8/indices-get-field-mapping.html
 
@@ -51,9 +51,6 @@ https://www.elastic.co/guide/en/elasticsearch/reference/6.8/indices-get-field-ma
 ```bash
 GET app-*/_mapping/field/conflictedFieldname
 ```
-
-
-
 
 ### Kibana Structured fields list
 
@@ -193,12 +190,12 @@ Create a new ILM Policy
 
 The output will be likely as follows:
 
-```{"_index":"ilm","_type":"policy","_id":"ilm_dedalus_policy","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":0,"_primary_term":1}```
+```{"_index":"ilm","_type":"policy","_id":"ilm_policy","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":0,"_primary_term":1}```
 
 Get the ILM Policy
 
 ```bash
-GET /ilm/policy/ilm_dedalus_policy
+GET /ilm/policy/ilm_my_policy
 ```
 
 ### Making the tasks automatic
@@ -214,7 +211,7 @@ es_pod=$(oc -n openshift-logging get pods -l component=elasticsearch --no-header
 * by the _curl_ command:
 
 ```bash
-curl -XPUT -k -H "X-Forwarded-For: 127.0.0.1" -H "Authorization: Bearer $token" https://es-openshift-logging.apps.sno-cluster.okd-sno.dedalus.red.com/_template/dedalus_es_template -H 'Content-Type: application/json' -d'
+curl -XPUT -k -H "X-Forwarded-For: 127.0.0.1" -H "Authorization: Bearer $token" https://es-openshift-logging.apps/_template/my_es_template -H 'Content-Type: application/json' -d'
 {
     "index_patterns": ["app-*"],
     "settings": {
@@ -242,7 +239,7 @@ curl -XPUT -k -H "X-Forwarded-For: 127.0.0.1" -H "Authorization: Bearer $token" 
 * by elasticsearch pod:
 
 ```bash
-oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/dedalus_es_template -XPUT -d'
+oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/my_es_template -XPUT -d'
 {
     "index_patterns": ["app-*"],
     "settings": {
@@ -267,10 +264,10 @@ oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_temp
 }'
 
 # Getting a specific Template
-oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/dedalus_es_template
+oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/my_es_template
 
 # Delete Template
-oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/dedalus_es_template -XDELETE
+oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/my_es_template -XDELETE
 
 # Getting All Templates
 oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template | jq "[.]"
