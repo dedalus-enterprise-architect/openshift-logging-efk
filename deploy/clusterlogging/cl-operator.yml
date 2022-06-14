@@ -64,4 +64,4 @@ spec:
   # Namespace of the catalog source. Use openshift-marketplace for the default OperatorHub catalog sources.
   sourceNamespace: openshift-marketplace
   # Set a specific version of an Operator CSV
-  startingCSV: cluster-logging.5.4.1-24
+  # startingCSV: cluster-logging.5.4.1-24

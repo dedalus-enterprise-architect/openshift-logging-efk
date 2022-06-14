@@ -7,6 +7,18 @@
 # =======================================
 #
 # :::
+# ::: Create the Namespace: openshift-operators-redhat
+# :::
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-operators-redhat 
+  annotations:
+    openshift.io/node-selector: ""
+  labels:
+    openshift.io/cluster-monitoring: "true" 
+---
+# :::
 # ::: Elasticsearch: OperatorGroup
 # :::
 apiVersion: operators.coreos.com/v1
@@ -16,6 +28,7 @@ metadata:
   namespace: openshift-operators-redhat
 ## you can omit the following "spec.targetNamespaces" to specify a global Operator group,
 ## which selects all namespaces
+spec: {}
 # spec:
 #   targetNamespaces:
 #   - openshift-operators-redhat
@@ -32,9 +45,9 @@ metadata:
   # For AllNamespaces install mode usage, specify the 'openshift-operators' namespace.
   # Otherwise, specify the relevant single namespace for SingleNamespace install mode usage.
   # look for installModes by command: 'oc get packagemanifests elasticsearch-operator -o yaml'
-  # namespace: openshift-operators-redhat
+  namespace: openshift-operators-redhat
   labels:
-    operators.coreos.com/elasticsearch-operator.openshift-operators-redhat: ''
+    # operators.coreos.com/elasticsearch-operator.openshift-operators-redhat: ''
     app: es-logging-dedalus
 spec:
   # Name of the channel to subscribe to.
@@ -51,4 +64,4 @@ spec:
   # Namespace of the catalog source. Use openshift-marketplace for the default OperatorHub catalog sources.
   sourceNamespace: openshift-marketplace
   # Set a specific version of an Operator CSV
-  startingCSV: elasticsearch-operator.5.4.1-24
+  # startingCSV: elasticsearch-operator.5.4.1-24

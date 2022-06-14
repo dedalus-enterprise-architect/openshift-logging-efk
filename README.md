@@ -48,7 +48,7 @@ Explore the files used by this project:
 It runs the following command to install the RedHat Elasticsearch Operator:
 
 ```
-   oc apply -f https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/elasticsearch/es-operator.yml -n openshift-operators-redhat
+   oc apply -f https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/elasticsearch/es-operator.yml
 ```
 
 > Check Objects
