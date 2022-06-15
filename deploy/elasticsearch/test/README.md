@@ -1,6 +1,6 @@
-# Elasticsearch Index Settings
+# EFK Stack HowTo
 
-## Working in progress
+|| This is a working in progress paragraph
 
 - *parse: json*
 
@@ -10,47 +10,28 @@
 
 This is a clipboard about Kibana version 6.8 on Openshift configured by the following operators:
 
-- Red Hat OpenShift Logging 5.4.0
-- OpenShift Elasticsearch Operator 5.4.0
+- Red Hat OpenShift Logging 5.4.x
+- OpenShift Elasticsearch Operator 5.4.x
 
 
 ### Kibana usefull commands
 
-```bash
-# print all the indexes
-GET /_cat/indices?v
+| Command | Description | 
+|-------------------------------------|-----------------------------------------|
+| ```GET /_cat/indices?v```                  |Print all the indexes|
+| ```GET /_cat/indices?v&h=i,tm&s=tm:desc``` |How much memory is used per index?|
+| ```GET /_cat/indices?v&s=docs.count:desc```|Which index has the largest number of documents?|
+| ```PUT /type_index_name{"aliases": {"logs_write": {}}}``` |Create an index|
+| ```DELETE /type_index_name```              |Delete an index|
+| ```GET /app-000001/_mapping/_doc?&include_type_name=true``` |Getting the index mapping|
 
-# How much memory is used per index?
-GET /_cat/indices?v&h=i,tm&s=tm:desc
-
-# Which index has the largest number of documents?
-GET /_cat/indices?v&s=docs.count:desc
-
-# create an index
-PUT /type_index_name
-{
-  "aliases": {
-    "logs_write": {}
-  }
-}
-
-# delete an index
-DELETE /type_index_name
-
-# getting the index mapping
-GET /app-test-logging-*/_mapping/_doc?&include_type_name=true
-GET /app-000001/_mapping/_doc?&include_type_name=true
-```
-
-#### Getting the field mapping
+#### Getting the field's mapping
 
 https://www.elastic.co/guide/en/elasticsearch/reference/6.8/indices-get-field-mapping.html
 
 #### Getting the field's conflits list
 
-```bash
-GET app-*/_mapping/field/conflictedFieldname
-```
+```GET app-*/_mapping/field/conflictedFieldname```
 
 ### Kibana Structured fields list
 
@@ -184,7 +165,7 @@ spec:
 
 Create a new ILM Policy
 
-```
+```bash
 ./ilm_policy.sh
 ```
 
@@ -262,25 +243,27 @@ oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_temp
         }
     }
 }'
-
-# Getting a specific Template
-oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/my_es_template
-
-# Delete Template
-oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/my_es_template -XDELETE
-
-# Getting All Templates
-oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template | jq "[.]"
 ```
+
+Get a specific Template:
+
+```oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/my_es_template```
+
+Delete Template:
+
+```oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/my_es_template -XDELETE```
+
+Get All Templates:
+
+```oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template | jq "[.]"```
 
 ### Index pattern
 
 It follows the commands to create the Index Pattern by Elasticsearch API:
 
->> working in progress
+#### create the default index pattern
 
 ```bash
-# create the default index pattern
 oc exec -n openshift-logging -c elasticsearch elasticsearch-cdm-owd8rzjq-1-5854579bd6-46mwp -- es_util --query=api/index_patterns/default -XPOST   -d'
 {
     "attributes": {
@@ -288,8 +271,11 @@ oc exec -n openshift-logging -c elasticsearch elasticsearch-cdm-owd8rzjq-1-58545
         "timeFieldName": "@timestamp"
     }
 }'
+```
 
-# set the advanced settings on kibana
+#### set the advanced settings on kibana
+
+```bash
 oc exec -n openshift-logging -c elasticsearch elasticsearch-cdm-owd8rzjq-1-5854579bd6-46mwp -- es_util --query=api/kibana/settings -XPOST   -d'
 {
     "changes": {
