@@ -1,18 +1,18 @@
-# Openshift Logging Resources
+# OpenShift Logging Resources
 
-This project collects some procedures on how to Set Up a custom EFK instance having the following minimum requirements:
+This project collects some procedures on how to setup a custom EFK instance having the following minimum requirements:
 
  * Cluster Logging Operator - community edition starting from version 5.4.0
 
- * Elasticsearch Operator - community edition starting from version 5.4.0
+ * ElasticSearch Operator - community edition starting from version 5.4.0
  
- * Openshift 4.9 or major
+ * OpenShift 4.9, 4.10, 4.11
 
 References:
   - https://github.com/openshift/cluster-logging-operator
   - https://github.com/openshift/elasticsearch-operator
 
-## Openshift Cluster Logging: Overview
+## OpenShift Cluster Logging: Overview
 
 This project focus on the following topics:
 
@@ -35,17 +35,17 @@ Explore the files used by this project:
 
 * ```deploy/kibana/kibana-externallink.template.yml``` : this template creates a new kibana link aimed to have a custom fields view available as default
 
-### Project minimium requirements
+### Project minimum requirements
 
-* The Openshift client utility: ```oc```
+* The OpenShift client utility: ```oc```
 
 * A cluster admin roles rights
 
-### RedHat Elasticsearch Operator: setup
+### RedHat ElasticSearch Operator: setup
 
 > WARNING: an Admin Cluster Role is required to proceed on this section.
 
-It runs the following command to install the RedHat Elasticsearch Operator:
+It runs the following command to install the RedHat ElasticSearch Operator:
 
 ```
    oc apply -f https://raw.githubusercontent.com/dedalus-enterprise-architect/efk-resources/main/deploy/elasticsearch/es-operator.yml
@@ -63,7 +63,7 @@ you can get a list of the previous created objects as follows:
 
 > WARNING: an Admin Cluster Role is required to proceed on this section.
 
-It runs the following command to install the RedHat Openshift Logging Operator.
+It runs the following command to install the RedHat OpenShift Logging Operator.
 
 1. Instanciate the _Cluster Logging Operator_:
 
@@ -121,7 +121,7 @@ you can get a list of the previous created objects as follows:
    oc get ConsoleExternalLogLink -l app=es-logging-dedalus --no-headers -n openshift-logging |cut -d' ' -f1
 ```
 
-## Elasticsearch: Create the index template
+## ElasticSearch: Create the index template
 
 This step create the default index template:
 
