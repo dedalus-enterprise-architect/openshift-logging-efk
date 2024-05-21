@@ -65,4 +65,4 @@ spec:
   # Namespace of the catalog source. Use openshift-marketplace for the default OperatorHub catalog sources.
   sourceNamespace: openshift-marketplace
   # Set a specific version of an Operator CSV
-  startingCSV: elasticsearch-operator.v5.7.5
+  startingCSV: elasticsearch-operator.v5.8.6
