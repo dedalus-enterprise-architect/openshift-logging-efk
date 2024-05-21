@@ -6,7 +6,7 @@ This project collects some procedures on how to setup a custom EFK instance base
 
  * RedHat ElasticSearch Operator - version 5.8.6
  
- * OpenShift 4.14
+ * OpenShift 4.14, 4.15
 
 References:
   - https://github.com/openshift/cluster-logging-operator
