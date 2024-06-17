@@ -1,10 +1,8 @@
-Project Authors
-===============
+# Project Authors
 
 The project was started in 2022 with the aim to enable the application logging within Openshift 4.x.
 
-
-## Project Developers:
+## Project Developers
 
 * Claudio Prato @ Enterprise Architect Team - Florence (Italy)
 

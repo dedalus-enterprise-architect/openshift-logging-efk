@@ -2,15 +2,16 @@
 
 This project collects some procedures on how to setup a custom EFK instance based on the following minimum requirements:
 
- * RedHat OpenShift Cluster Logging Operator - version 5.9.1
+* RedHat OpenShift Cluster Logging Operator - version 5.9.1
 
- * RedHat ElasticSearch Operator - version 5.8.6
- 
- * OpenShift 4.14, 4.15
+* RedHat ElasticSearch Operator - version 5.8.6
+
+* OpenShift 4.14, 4.15
 
 References:
-  - https://github.com/openshift/cluster-logging-operator
-  - https://github.com/openshift/elasticsearch-operator
+
+* <https://github.com/openshift/cluster-logging-operator>
+* <https://github.com/openshift/elasticsearch-operator>
 
 ## OpenShift Cluster Logging: Overview
 
@@ -53,7 +54,7 @@ Explore the files used by this project:
 
 Run the following command to install the RedHat ElasticSearch Operator:
 
-```
+```bash
    oc apply -f deploy/elasticsearch/es-operator.yml
 ```
 
@@ -61,7 +62,7 @@ Run the following command to install the RedHat ElasticSearch Operator:
 
 Get a list of the objects created:
 
-```
+```bash
    oc get all,ConfigMap,Secret,Elasticsearch,OperatorGroup,Subscription -l app=es-logging-dedalus --no-headers -n openshift-operators-redhat |cut -d' ' -f1
 ```
 
@@ -73,13 +74,13 @@ Run the following command to install the RedHat OpenShift Cluster Logging Operat
 
 1. Instanciate the _Cluster Logging Operator_:
 
-```
+```bash
    oc apply -f deploy/clusterlogging/cl-operator.yml -n openshift-logging
 ```
 
 2. Instanciate the _ClusterLogging_ instance with inline parameters:
 
-```
+```bash
    oc process -f deploy/clusterlogging/cl-instance.template.yml \
      -p STORAGECLASS=@type_here_the_custom_storageclass@ \
      | oc -n openshift-logging apply -f -
@@ -87,7 +88,7 @@ Run the following command to install the RedHat OpenShift Cluster Logging Operat
 
 3. Instanciate the _Cluster Forwarder_:
 
-```
+```bash
    oc apply -f deploy/clusterlogging/cl-forwarder.yml -n openshift-logging
 ```
 
@@ -95,7 +96,7 @@ Run the following command to install the RedHat OpenShift Cluster Logging Operat
 
 Get a list of the objects created:
 
-```
+```bash
    oc get all,ConfigMap,Secret,OperatorGroup,Subscription,ClusterLogging,ClusterLogForwarder \
      -l app=cl-logging-dedalus --no-headers -n openshift-logging |cut -d' ' -f1
 ```
@@ -106,7 +107,7 @@ Get a list of the objects created:
 
 Run the following command to create the External Console Link for Kibana default View:
 
-```
+```bash
    oc process -f deploy/kibana/kibana-externallink.template.yml \
      -p KIBANA_ROUTE=$(oc get route kibana -n openshift-logging -o jsonpath='{.spec.host}') \
      | oc -n openshift-logging apply -f -
@@ -116,7 +117,7 @@ Run the following command to create the External Console Link for Kibana default
 
 Get a list of the objects created:
 
-```
+```bash
    oc get ConsoleExternalLogLink -l app=es-logging-dedalus --no-headers -n openshift-logging |cut -d' ' -f1
 ```
 
