@@ -1,123 +1,122 @@
 # OpenShift Logging Resources
 
-This project collects some procedures on how to setup a custom EFK instance based on the following minimum requirements:
+This project collects some procedures on how to set up a custom EFK instance based on the following minimum requirements:
 
- * RedHat OpenShift Cluster Logging Operator - version 5.9.1
-
- * RedHat ElasticSearch Operator - version 5.8.6
- 
- * OpenShift 4.14, 4.15
+* __Dedalus__ OpenShift Cluster Logging Operator - version 5.9.0
+* __RedHat__ ElasticSearch Operator - version 5.8.0
+* _OpenShift_ / _OKD_ version: 4.14, 4.15, 4.16
 
 References:
-  - https://github.com/openshift/cluster-logging-operator
-  - https://github.com/openshift/elasticsearch-operator
+
+* <https://github.com/dedalus-enterprise-architect/openshift-logging-efk/blob/feature/v5.9.0-dedalus/README.md>
+* <https://github.com/openshift/elasticsearch-operator>
 
 ## OpenShift Cluster Logging: Overview
 
-This project focus on the following topics:
+This project focuses on the following topics:
 
-    * logging persistent storage
-    * custom indexes template in order to avoiding the field's map explosion
-    * improving the indexes retention
-    * kibana custom structured field view
+* logging persistent storage
+* custom indexes template to avoid field map explosion
+* improving index retention
+* Kibana custom structured field view
 
 Explore the files used by this project:
 
-* ```deploy/clusterlogging/cl-forwarder.yml``` : __cluster forwarder instance__ definition
-
-* ```deploy/clusterlogging/cl-instance.template.yml``` : __cluster logging instance__ definition for a single pod deployment
-
-* ```deploy/clusterlogging/cl-instance-ha.template.yml``` : __cluster logging instance__ definition for a high-availability deployment; _tolerations_ directives have been implemented for Infra node roles, uncomment them when needed
-
-* ```deploy/clusterlogging/cl-operator.yml``` : template to install the RedHat Openshift Cluster Logging Operator stack
-
-* ```deploy/elasticsearch/es-operator.yml``` : template to install the RedHat ElasticSearch Operator
-
-* ```deploy/elasticsearch/index_explicit_mapping_template.sh``` : script to create a custom index template on ElasticSearch
-
-* ```deploy/kibana/kibana-externallink.template.yml``` : template to create a Route to publish Kibana link aimed to have a custom fields view available as default
+* `deploy/catalogsource/global-catalogsource.yaml`: Dedalus __CatalogSource__ definition
+* `deploy/clusterlogging/cl-forwarder.yml`: __cluster forwarder instance__ definition
+* `deploy/clusterlogging/cl-instance.template.yml`: __cluster logging instance__ definition for a single pod deployment
+* `deploy/clusterlogging/cl-instance-ha.template.yml`: __cluster logging instance__ definition for a high-availability deployment; _tolerations_ directives have been implemented for Infra node roles, uncomment them when needed
+* `deploy/clusterlogging/cl-operator.yml`: template to install the Dedalus Openshift Cluster Logging Operator stack
+* `deploy/elasticsearch/es-operator.yml`: template to install the RedHat ElasticSearch Operator
+* `deploy/elasticsearch/index_explicit_mapping_template.sh`: script to create a custom index template on ElasticSearch
+* `deploy/kibana/kibana-externallink.template.yml`: template to create a Route to publish Kibana link aimed to have a custom fields view available as default
 
 ### Project minimum requirements
 
-* The OpenShift client utility: ```oc```
+* The OpenShift client utility: `oc`
+* Cluster admin role rights
+* __Dedalus Operators__ catalog available on the cluster. No pull secret is required!
+* Local clone of the Git project
 
-* A cluster admin roles rights
+### Import the CatalogSource of Dedalus
 
-* RedHat Operators catalog available on cluster
+Before go on you need to configure the Dedalus _CatalogSource_ object as follow:
 
-* Git project local clone
+```bash
+oc apply -f deploy/catalogsource/global-catalogsource.yaml
+```
 
 ### RedHat ElasticSearch Operator: setup
 
-> WARNING: an Admin Cluster Role is required to proceed on this section.
+> WARNING: an Admin Cluster Role is required to proceed in this section.
 
 Run the following command to install the RedHat ElasticSearch Operator:
 
-```
-   oc apply -f deploy/elasticsearch/es-operator.yml
-```
-
-> Check objects
-
-Get a list of the objects created:
-
-```
-   oc get all,ConfigMap,Secret,Elasticsearch,OperatorGroup,Subscription -l app=es-logging-dedalus --no-headers -n openshift-operators-redhat |cut -d' ' -f1
-```
-
-### RedHat OpenShift Cluster Logging Operator: setup
-
-> WARNING: an Admin Cluster Role is required to proceed on this section.
-
-Run the following command to install the RedHat OpenShift Cluster Logging Operator:
-
-1. Instanciate the _Cluster Logging Operator_:
-
-```
-   oc apply -f deploy/clusterlogging/cl-operator.yml -n openshift-logging
-```
-
-2. Instanciate the _ClusterLogging_ instance with inline parameters:
-
-```
-   oc process -f deploy/clusterlogging/cl-instance.template.yml \
-     -p STORAGECLASS=@type_here_the_custom_storageclass@ \
-     | oc -n openshift-logging apply -f -
-```
-
-3. Instanciate the _Cluster Forwarder_:
-
-```
-   oc apply -f deploy/clusterlogging/cl-forwarder.yml -n openshift-logging
+```bash
+oc apply -f deploy/elasticsearch/es-operator.yml
 ```
 
 > Check objects
 
 Get a list of the objects created:
 
+```bash
+oc get all,ConfigMap,Secret,Elasticsearch,OperatorGroup,Subscription -l app=es-logging-dedalus --no-headers -n openshift-operators-redhat | cut -d' ' -f1
 ```
-   oc get all,ConfigMap,Secret,OperatorGroup,Subscription,ClusterLogging,ClusterLogForwarder \
-     -l app=cl-logging-dedalus --no-headers -n openshift-logging |cut -d' ' -f1
+
+### Dedalus OpenShift Cluster Logging Operator: setup
+
+> WARNING: an Admin Cluster Role is required to proceed in this section.
+
+Run the following command to install the Dedalus OpenShift Cluster Logging Operator:
+
+1. Instantiate the _Cluster Logging Operator_:
+
+```bash
+oc apply -f deploy/clusterlogging/cl-operator.yml -n openshift-logging
+```
+
+2. Instantiate the _ClusterLogging_ instance with inline parameters:
+
+```bash
+oc process -f deploy/clusterlogging/cl-instance.template.yml \
+   -p STORAGECLASS=@type_here_the_custom_storageclass@ \
+   | oc -n openshift-logging apply -f -
+```
+
+3. Instantiate the _Cluster Forwarder_:
+
+```bash
+oc apply -f deploy/clusterlogging/cl-forwarder.yml -n openshift-logging
+```
+
+> Check objects
+
+Get a list of the objects created:
+
+```bash
+oc get all,ConfigMap,Secret,OperatorGroup,Subscription,ClusterLogging,ClusterLogForwarder \
+   -l app=cl-logging-dedalus --no-headers -n openshift-logging | cut -d' ' -f1
 ```
 
 ### Kibana: create the External Console Link
 
-> WARNING: an Admin Cluster Role is required to proceed on this section.
+> WARNING: an Admin Cluster Role is required to proceed in this section.
 
 Run the following command to create the External Console Link for Kibana default View:
 
-```
-   oc process -f deploy/kibana/kibana-externallink.template.yml \
-     -p KIBANA_ROUTE=$(oc get route kibana -n openshift-logging -o jsonpath='{.spec.host}') \
-     | oc -n openshift-logging apply -f -
+```bash
+oc process -f deploy/kibana/kibana-externallink.template.yml \
+   -p KIBANA_ROUTE=$(oc get route kibana -n openshift-logging -o jsonpath='{.spec.host}') \
+   | oc -n openshift-logging apply -f -
 ```
 
 > Check objects
 
 Get a list of the objects created:
 
-```
-   oc get ConsoleExternalLogLink -l app=es-logging-dedalus --no-headers -n openshift-logging |cut -d' ' -f1
+```bash
+oc get ConsoleExternalLogLink -l app=es-logging-dedalus --no-headers -n openshift-logging | cut -d' ' -f1
 ```
 
 ## ElasticSearch: create the index template
@@ -125,37 +124,39 @@ Get a list of the objects created:
 Create the default index template:
 
 ```bash
-   . deploy/elasticsearch/index_explicit_mapping_template.sh
+. deploy/elasticsearch/index_explicit_mapping_template.sh
 ```
 
-If the command is successful, will be returned the output:
+If the command is successful, the output will be:
 
 ```json
-   {"acknowledged":true}
+{"acknowledged":true}
 ```
 
 ### Useful ElasticSearch commands
 
-Getting the ES pod name as pre-requirements for the nexts commands:
+Getting the ES pod name as a prerequisite for the next commands:
 
 ```bash
-   es_pod=$(oc -n openshift-logging get pods -l component=elasticsearch --no-headers | head -1 | cut -d" " -f1)
+es_pod=$(oc -n openshift-logging get pods -l component=elasticsearch --no-headers | head -1 | cut -d" " -f1)
 ```
 
 * Getting a specific Template:
 
 ```bash
-   oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/dedalus_es_template
+oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/dedalus_es_template
 ```
 
 * Delete Template:
 
 ```bash
-   oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/dedalus_es_template -XDELETE
+oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/dedalus_es_template -XDELETE
 ```
 
 * Getting All Templates:
 
 ```bash
-   oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template | jq "[.]"
+oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template | jq "[.]"
 ```
+
+If you have any other questions or need further details, feel free to ask! 😊
