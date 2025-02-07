@@ -7,6 +7,11 @@ The `global-catalogsource.yaml` file is a Kubernetes manifest used to define a C
 * public.ecr.aws/dedalus-ea/okd4/origin-cluster-logging-operator-bundle:5.9.0
 * public.ecr.aws/dedalus-ea/okd4/elasticsearch-operator-bundle:5.8.0
 
+The above images are built starting from the following repositories:
+
+* https://github.com/dedalus-enterprise-architect/cluster-logging-operator
+* https://github.com/dedalus-enterprise-architect/elasticsearch-operator
+
 ## Key Components
 
 - **apiVersion**: Specifies the API version, typically `operators.coreos.com/v1alpha1`.
