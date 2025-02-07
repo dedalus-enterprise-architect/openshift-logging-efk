@@ -2,9 +2,9 @@
 
 This project collects some procedures on how to set up a custom EFK instance based on the following minimum requirements:
 
-* __Dedalus__ OpenShift Cluster Logging Operator - version 5.9.0
-* __RedHat__ ElasticSearch Operator - version 5.8.0
-* _OpenShift_ / _OKD_ version: 4.14, 4.15, 4.16
+* __Dedalus__ OpenShift Cluster Logging Operator - version 5.9.x
+* __RedHat__ ElasticSearch Operator - version 5.8.x
+* _OpenShift_ / _OKD_ version: 4.14, 4.15, 4.16 (not tested yet: 4.17, 4.18)
 
 References:
 
