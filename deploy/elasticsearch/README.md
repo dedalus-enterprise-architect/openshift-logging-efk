@@ -93,7 +93,7 @@ pod
 
 ```bash
 podman build -t quay.io/openshift-logging/elasticsearch-operator-bundle:5.8.0 -f bundle.Dockerfile .
-podman push public.ecr.aws/dedalus-ea/okd4/elasticsearch-operator:5.8.0
+podman push public.ecr.aws/dedalus-ea/okd4/elasticsearch-operator-bundle:5.8.0
 ```
 
 ### Build the index image
