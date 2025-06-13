@@ -138,7 +138,13 @@ If the command is successful, the output will be:
 Getting the ES pod name as a prerequisite for the next commands:
 
 ```bash
-es_pod=$(oc -n openshift-logging get pods -l component=elasticsearch --no-headers | head -1 | cut -d" " -f1)
+es_pod=$(oc -n openshift-logging get pods -l component=elasticsearch -o jsonpath='{.items[0].metadata.name}')
+```
+
+* Getting all the rejected events from Pods:
+
+```bash
+oc logs -n openshift-logging ${es_pod} -c elasticsearch -f
 ```
 
 * Getting a specific Template:
@@ -152,6 +158,9 @@ oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_temp
 ```bash
 oc exec -n openshift-logging -c elasticsearch ${es_pod} -- es_util --query=_template/dedalus_es_template -XDELETE
 ```
+
+* Delete an Index Pattern by using the DevTools on Kibana UI: ```DELETE app-platform-dc4h-test-*```
+
 
 * Getting All Templates:
 
